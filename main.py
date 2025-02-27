@@ -1,4 +1,4 @@
-from backend.server import start_server
+from backend.server import start_app
 
 if __name__ == "__main__":
-    start_server()
+    start_app()
