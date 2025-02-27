@@ -8,16 +8,16 @@ class WebSocketManager:
         self.active_connections = []
 
     async def connect(self, websocket: WebSocket):
-        """ Accepts a new WebSocket connection and adds it to the list. """
+        """ Accepts a new WebSocket connection. """
         await websocket.accept()
         self.active_connections.append(websocket)
-        print(f"New WebSocket Connection: {websocket.client}")
+        print(f"🔗 WebSocket connected: {websocket.client}")
 
     async def disconnect(self, websocket: WebSocket):
-        """ Removes a WebSocket connection when it closes. """
+        """ Removes a WebSocket connection. """
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
-            print(f"WebSocket Disconnected: {websocket.client}")
+            print(f"❌ WebSocket disconnected: {websocket.client}")
 
     async def broadcast(self, message: dict):
         """ Sends a message to all connected clients. """
@@ -25,17 +25,14 @@ class WebSocketManager:
             await connection.send_text(json.dumps(message))
 
     async def handle_message(self, websocket: WebSocket):
-        """ Listens for incoming messages and processes them. """
+        """ Listens for incoming messages. """
         try:
             while True:
                 data = await websocket.receive_text()
-                print(f"Received from frontend: {data}")
-
-                # Example: Send a response back to all clients
+                print(f"📩 Received from frontend: {data}")
                 response = {"response": f"Server received: {data}"}
                 await self.broadcast(response)
-        
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"⚠️ WebSocket error: {e}")
         finally:
             await self.disconnect(websocket)
