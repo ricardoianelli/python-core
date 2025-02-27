@@ -1,17 +1,17 @@
 import asyncio
-from backend.machine import Machine
-from backend.server import start_server
-from backend.frontend import start_frontend
+from machine.machine import Machine
+from backend.server import start_backend
+from frontend.launcher import start_frontend
 
 async def main():
-    """ Orchestrates backend initialization, Uvicorn, and PyWebView. """
+    """ Orchestrates backend initialization, server startup, and frontend. """
     machine = Machine()
 
-    # Start backend initialization
+    # Start machine first
     await machine.initialize()
 
-    # Start Uvicorn (API & WebSockets)
-    start_server()
+    # Start backend (FastAPI & WebSockets)
+    start_backend()
 
     # Start frontend (PyWebView)
     start_frontend()
