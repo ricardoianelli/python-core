@@ -29,3 +29,6 @@ function sendMessage() {
         console.log("WebSocket not connected.");
     }
 }
+
+
+connectWebSocket();
