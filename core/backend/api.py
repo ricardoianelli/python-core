@@ -1,5 +1,5 @@
 from fastapi import FastAPI, WebSocket
-from backend.websocket_manager import WebSocketManager
+from core.backend.websocket_manager import WebSocketManager
 
 app = FastAPI()
 ws_manager = WebSocketManager()

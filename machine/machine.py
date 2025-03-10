@@ -27,11 +27,15 @@ class Machine:
     async def initialize(self):
         """ Runs the full machine startup sequence asynchronously. """
         await self.on_starting()
+        
         await asyncio.sleep(1)  # Simulate startup delay
+        
         await self.on_started()
 
     async def shutdown(self):
         """ Runs the shutdown sequence asynchronously. """
         await self.on_shutting_down()
+        
         await asyncio.sleep(1)  # Simulate shutdown delay
+        
         await self.on_shutdown()

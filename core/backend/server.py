@@ -1,8 +1,8 @@
 import threading
 import asyncio
 import uvicorn
-from backend.api import app
-from frontend.static_server import configure_static_files  # Moved to frontend
+from core.backend.api import app
+from core.frontend.static_server import configure_static_files  # Moved to frontend
 
 def start_uvicorn():
     """ Runs Uvicorn in a separate thread using a proper event loop. """
