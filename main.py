@@ -2,7 +2,7 @@ import asyncio
 from core.logging.log_service import LogService
 from machine.machine import Machine
 from core.backend.server import start_backend
-from core.frontend.launcher import start_frontend
+from frontend.launcher import start_frontend
 
 
 async def main():
