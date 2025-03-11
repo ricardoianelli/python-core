@@ -86,3 +86,6 @@ app/static/images/*.png
 
 # env 
 .env
+
+# SQLite databases
+*.db

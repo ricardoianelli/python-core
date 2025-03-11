@@ -1,7 +1,7 @@
 import threading
 import asyncio
 import uvicorn
-from backend.api import app
+from core.backend.api import app
 from frontend.static_server import configure_static_files  # Moved to frontend
 
 def start_uvicorn():

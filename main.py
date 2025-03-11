@@ -1,10 +1,17 @@
 import asyncio
+from core.logging.log_service import LogService
 from machine.machine import Machine
-from backend.server import start_backend
+from core.backend.server import start_backend
 from frontend.launcher import start_frontend
+
 
 async def main():
     """ Orchestrates backend initialization, server startup, and frontend. """
+
+    await LogService.initialize()
+    
+    await LogService.log_async("Initializing Python Core...")
+    
     machine = Machine()
 
     # Start machine first
@@ -15,6 +22,8 @@ async def main():
 
     # Start frontend (PyWebView)
     start_frontend()
+    
+    await LogService.log_async("Python Core Initialized!")
 
 if __name__ == "__main__":
     asyncio.run(main())

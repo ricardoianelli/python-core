@@ -3,13 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyWebView + WebSockets</title>
+    <title>WebSocket Log Viewer</title>
     <link rel="stylesheet" href="static/css/style.css">
     <script src="static/js/script.js" defer></script>
 </head>
 <body>
-    <h1>WebSocket Communication</h1>
-    <button onclick="sendMessage()">Send Message</button>
-    <p id="response"></p>
+    <h1>Log Viewer</h1>
+
+    <!-- Log Input Section -->
+    <div class="log-input-container">
+        <input type="text" id="logMessage" placeholder="Enter log message..." />
+        <select id="logLevel">
+            <option value="INFO">INFO</option>
+            <option value="WARNING">WARNING</option>
+            <option value="ERROR">ERROR</option>
+        </select>
+        <button onclick="sendLog()">Add Log</button>
+        <button onclick="clearLogs()" class="clear-button">Clear Logs</button>
+    </div>
+
+    <!-- Log Filter Section -->
+    <div class="log-filter-container">
+        <label for="filterLevel">Filter Logs:</label>
+        <select id="filterLevel" onchange="filterLogs()">
+            <option value="ALL">ALL</option>
+            <option value="INFO">INFO</option>
+            <option value="WARNING">WARNING</option>
+            <option value="ERROR">ERROR</option>
+        </select>
+    </div>
+
+    <!-- Log Display Section -->
+    <h2>Logs:</h2>
+    <div id="logContainer"></div>
+
 </body>
 </html>

@@ -1,8 +1,72 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    margin: 20px;
 }
-button {
+
+.log-input-container, .log-filter-container {
+    margin-bottom: 20px;
+}
+
+input, select, button {
     padding: 10px;
     font-size: 16px;
+    margin: 5px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.clear-button {
+    background-color: red;
+    color: white;
+}
+
+#logContainer {
+    text-align: left;
+    width: 50%;
+    margin: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #f9f9f9;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Log entry styling */
+.log-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    word-wrap: break-word; /* Prevents text overflow */
+    white-space: pre-wrap; /* Ensures long messages wrap properly */
+    max-width: 100%;
+}
+
+/* Color coding for log levels */
+.log-info {
+    background-color: #ffffff; /* White */
+    border-left: 5px solid #3498db; /* Blue border */
+}
+
+.log-warning {
+    background-color: #ffefc6; /* Light orange */
+    border-left: 5px solid #f39c12; /* Orange border */
+}
+
+.log-error {
+    background-color: #ffdddd; /* Light red */
+    border-left: 5px solid #e74c3c; /* Red border */
+}
+
+.delete-btn {
+    background-color: crimson;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
 }
