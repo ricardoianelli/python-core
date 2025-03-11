@@ -13,10 +13,10 @@ class LogRepository:
             await db.execute(queries.CREATE_LOGS_TABLE)
             await db.commit()
 
-    async def add_log(self, log_level: str, message: str):
-        """Adds a log entry to the database."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(queries.INSERT_LOG, (log_level, message))
+    async def add_log(self, log_level: str, message: str, timestamp: str):
+        """Inserts a log into the database using the provided timestamp."""
+        async with aiosqlite.connect("app.db") as db:
+            await db.execute(queries.INSERT_LOG, (log_level, message, timestamp))
             await db.commit()
 
     async def get_logs(self):

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS logs (
 """
 
 INSERT_LOG = """
-INSERT INTO logs (log_level, message) VALUES (?, ?);
+INSERT INTO logs (log_level, message, timestamp) VALUES (?, ?, ?);
 """
 
 FETCH_ALL_LOGS = """

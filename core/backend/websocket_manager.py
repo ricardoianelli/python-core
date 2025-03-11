@@ -24,9 +24,19 @@ class WebSocketManager:
 
     @classmethod
     async def broadcast(cls, message: dict):
-        """Sends a message to all connected clients."""
+        """Sends a message to all connected clients, with error handling."""
+        disconnected_clients = []
         for connection in cls.active_connections:
-            await connection.send_text(json.dumps(message))
+            try:
+                await connection.send_text(json.dumps(message))
+            except Exception as e:
+                print(f"⚠️ WebSocket send failed: {e}")
+                disconnected_clients.append(connection)
+
+        # Remove disconnected clients
+        for client in disconnected_clients:
+            await cls.disconnect(client)
+
 
     @classmethod
     def subscribe_to_incoming(cls, message_type: str, callback: Callable):

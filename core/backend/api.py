@@ -1,10 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from core.backend.websocket_manager import WebSocketManager
-from core.logging.log_service import LogService
 
 app = FastAPI()
-
-LogService()
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

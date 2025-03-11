@@ -1,5 +1,7 @@
 import asyncio
 
+from core.logging.log_service import LogService
+
 class Machine:
     """ Manages the lifecycle of the machine. """
 
@@ -8,21 +10,21 @@ class Machine:
 
     async def on_starting(self):
         """ Called before the machine starts. """
-        print("🚀 Machine is starting...")
+        await LogService.log_async("🚀 Machine is starting...")
 
     async def on_started(self):
         """ Called when the machine is fully started. """
         self.running = True
-        print("✅ Machine started successfully!")
+        await LogService.log_async("✅ Machine started successfully!")
 
     async def on_shutting_down(self):
         """ Called before the machine shuts down. """
-        print("⚠️ Machine is shutting down...")
+        await LogService.log_async("⚠️ Machine is shutting down...")
 
     async def on_shutdown(self):
         """ Called when the machine is completely shut down. """
         self.running = False
-        print("🔴 Machine has shut down.")
+        await LogService.log_async("🔴 Machine has shut down.")
 
     async def initialize(self):
         """ Runs the full machine startup sequence asynchronously. """
