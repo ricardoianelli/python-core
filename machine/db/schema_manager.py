@@ -1,5 +1,5 @@
 import core.logging.queries as Queries
-from database.database_client import DatabaseClient
+from core.database.database_client import DatabaseClient
 
 
 class SchemaManager:
