@@ -24,3 +24,11 @@ DELETE FROM logs WHERE id NOT IN (
     SELECT id FROM logs ORDER BY id DESC LIMIT ?
 );
 """
+
+DELETE_LOG_BY_ID = """
+DELETE FROM logs WHERE id = ?;
+"""
+
+CLEAR_ALL_LOGS = """
+DELETE FROM logs;
+"""

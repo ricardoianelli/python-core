@@ -16,6 +16,9 @@ class LogService:
         WebSocketManager.subscribe_to_incoming("fetch_logs", self.fetch_logs)
         WebSocketManager.subscribe_to_incoming("fetch_logs_by_level", self.fetch_logs_by_level)
         WebSocketManager.subscribe_to_incoming("delete_old_logs", self.delete_old_logs)
+        WebSocketManager.subscribe_to_incoming("delete_log", self.delete_log)
+        WebSocketManager.subscribe_to_incoming("clear_logs", self.clear_logs)
+
 
     async def initialize_db(self, message):
         """Ensures the database is ready before any logging operations."""
@@ -51,3 +54,14 @@ class LogService:
         max_entries = message.get("max_entries", 1000)
         await self.repository.delete_old_logs(max_entries)
         await WebSocketManager.broadcast({"type": "logs_deleted", "remaining_entries": max_entries})
+        
+    async def delete_log(self, message):
+        """Deletes a log entry."""
+        log_id = message.get("id")
+        await self.repository.delete_log(log_id)
+        await WebSocketManager.broadcast({"type": "log_deleted", "id": log_id})
+
+    async def clear_logs(self, message):
+        """Deletes all logs."""
+        await self.repository.clear_logs()
+        await WebSocketManager.broadcast({"type": "logs_cleared"})

@@ -15,6 +15,10 @@ function connectWebSocket() {
             displayLogs(message.logs);
         } else if (message.type === "new_log") {
             appendLog(message);
+        } else if (message.type === "log_deleted") {
+            removeLogFromUI(message.id);
+        } else if (message.type === "logs_cleared") {
+            clearLogsFromUI();
         }
     };
 
@@ -40,6 +44,20 @@ function sendLog() {
     }
 }
 
+// Send request to clear logs
+function clearLogs() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "clear_logs" }));
+    }
+}
+
+// Send request to delete a single log
+function deleteLog(id) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "delete_log", id: id }));
+    }
+}
+
 // Display logs in the UI
 function displayLogs(logs) {
     let logContainer = document.getElementById("logContainer");
@@ -54,8 +72,28 @@ function displayLogs(logs) {
 function appendLog(log) {
     let logContainer = document.getElementById("logContainer");
     let logElement = document.createElement("div");
-    logElement.textContent = `[${log.timestamp}] ${log.log_level}: ${log.message}`;
+    logElement.classList.add("log-entry");
+    logElement.setAttribute("id", `log-${log.id}`);
+
+    logElement.innerHTML = `
+        <span>[${log.timestamp}] ${log.log_level}: ${log.message}</span>
+        <button class="delete-btn" onclick="deleteLog(${log.id})">Delete</button>
+    `;
+
     logContainer.appendChild(logElement);
+}
+
+// Remove a single log entry from the UI
+function removeLogFromUI(id) {
+    let logElement = document.getElementById(`log-${id}`);
+    if (logElement) {
+        logElement.remove();
+    }
+}
+
+// Clear all logs from the UI
+function clearLogsFromUI() {
+    document.getElementById("logContainer").innerHTML = "";
 }
 
 connectWebSocket();

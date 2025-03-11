@@ -38,3 +38,15 @@ class LogRepository:
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute(queries.DELETE_OLD_LOGS, (max_entries,))
             await db.commit()
+            
+    async def delete_log(self, log_id: int):
+        """Deletes a log by ID."""
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute(queries.DELETE_LOG_BY_ID, (log_id,))
+            await db.commit()
+
+    async def clear_logs(self):
+        """Deletes all logs."""
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute(queries.CLEAR_ALL_LOGS)
+            await db.commit()
