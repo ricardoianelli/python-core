@@ -4,7 +4,7 @@ body {
     margin: 20px;
 }
 
-.log-input-container {
+.log-input-container, .log-filter-container {
     margin-bottom: 20px;
 }
 

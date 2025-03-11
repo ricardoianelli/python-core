@@ -22,8 +22,20 @@
         <button onclick="clearLogs()" class="clear-button">Clear Logs</button>
     </div>
 
+    <!-- Log Filter Section -->
+    <div class="log-filter-container">
+        <label for="filterLevel">Filter Logs:</label>
+        <select id="filterLevel" onchange="filterLogs()">
+            <option value="ALL">ALL</option>
+            <option value="INFO">INFO</option>
+            <option value="WARNING">WARNING</option>
+            <option value="ERROR">ERROR</option>
+        </select>
+    </div>
+
     <!-- Log Display Section -->
     <h2>Logs:</h2>
     <div id="logContainer"></div>
+
 </body>
 </html>

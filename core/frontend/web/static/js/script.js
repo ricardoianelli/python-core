@@ -1,4 +1,5 @@
 let socket;
+let allLogs = [];  // Store logs in memory for filtering
 
 function connectWebSocket() {
     socket = new WebSocket("ws://127.0.0.1:8000/ws");
@@ -12,13 +13,17 @@ function connectWebSocket() {
         let message = JSON.parse(event.data);
         
         if (message.type === "all_logs") {
-            displayLogs(message.logs);
+            allLogs = message.logs;
+            filterLogs(); // Display logs based on the current filter
         } else if (message.type === "new_log") {
-            appendLog(message);
+            allLogs.push(message);
+            filterLogs();
         } else if (message.type === "log_deleted") {
-            removeLogFromUI(message.id);
+            allLogs = allLogs.filter(log => log.id !== message.id);
+            filterLogs();
         } else if (message.type === "logs_cleared") {
-            clearLogsFromUI();
+            allLogs = [];
+            filterLogs();
         }
     };
 
@@ -58,12 +63,15 @@ function deleteLog(id) {
     }
 }
 
-// Display logs in the UI
-function displayLogs(logs) {
+// Display logs based on the selected filter
+function filterLogs() {
+    let filterLevel = document.getElementById("filterLevel").value;
+    let filteredLogs = filterLevel === "ALL" ? allLogs : allLogs.filter(log => log.log_level === filterLevel);
+    
     let logContainer = document.getElementById("logContainer");
     logContainer.innerHTML = ""; // Clear previous logs
 
-    logs.forEach(log => {
+    filteredLogs.forEach(log => {
         appendLog(log);
     });
 }
@@ -81,19 +89,6 @@ function appendLog(log) {
     `;
 
     logContainer.appendChild(logElement);
-}
-
-// Remove a single log entry from the UI
-function removeLogFromUI(id) {
-    let logElement = document.getElementById(`log-${id}`);
-    if (logElement) {
-        logElement.remove();
-    }
-}
-
-// Clear all logs from the UI
-function clearLogsFromUI() {
-    document.getElementById("logContainer").innerHTML = "";
 }
 
 connectWebSocket();
