@@ -76,11 +76,25 @@ function filterLogs() {
     });
 }
 
-// Append a single log entry to the UI
+// Append a single log entry to the UI with color coding
 function appendLog(log) {
     let logContainer = document.getElementById("logContainer");
     let logElement = document.createElement("div");
     logElement.classList.add("log-entry");
+
+    // Assign a class based on log level
+    switch (log.log_level) {
+        case "INFO":
+            logElement.classList.add("log-info");
+            break;
+        case "WARNING":
+            logElement.classList.add("log-warning");
+            break;
+        case "ERROR":
+            logElement.classList.add("log-error");
+            break;
+    }
+
     logElement.setAttribute("id", `log-${log.id}`);
 
     logElement.innerHTML = `
@@ -89,6 +103,9 @@ function appendLog(log) {
     `;
 
     logContainer.appendChild(logElement);
+
+    // Scroll to latest log
+    logContainer.scrollTop = logContainer.scrollHeight;
 }
 
 connectWebSocket();
