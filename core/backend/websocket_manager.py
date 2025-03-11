@@ -1,38 +1,56 @@
 from fastapi import WebSocket
 import json
+from typing import Callable, Dict, List
 
 class WebSocketManager:
-    """ Manages all WebSocket connections and message handling. """
-    
-    def __init__(self):
-        self.active_connections = []
+    """Manages WebSocket connections and allows static subscriptions to incoming messages."""
 
-    async def connect(self, websocket: WebSocket):
-        """ Accepts a new WebSocket connection. """
+    active_connections: List[WebSocket] = []
+    _incoming_subscribers: Dict[str, List[Callable]] = {}
+
+    @classmethod
+    async def connect(cls, websocket: WebSocket):
+        """Accepts a new WebSocket connection."""
         await websocket.accept()
-        self.active_connections.append(websocket)
+        cls.active_connections.append(websocket)
         print(f"🔗 WebSocket connected: {websocket.client}")
 
-    async def disconnect(self, websocket: WebSocket):
-        """ Removes a WebSocket connection. """
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
+    @classmethod
+    async def disconnect(cls, websocket: WebSocket):
+        """Removes a WebSocket connection."""
+        if websocket in cls.active_connections:
+            cls.active_connections.remove(websocket)
             print(f"❌ WebSocket disconnected: {websocket.client}")
 
-    async def broadcast(self, message: dict):
-        """ Sends a message to all connected clients. """
-        for connection in self.active_connections:
+    @classmethod
+    async def broadcast(cls, message: dict):
+        """Sends a message to all connected clients."""
+        for connection in cls.active_connections:
             await connection.send_text(json.dumps(message))
 
-    async def handle_message(self, websocket: WebSocket):
-        """ Listens for incoming messages. """
+    @classmethod
+    def subscribe_to_incoming(cls, message_type: str, callback: Callable):
+        """Allows any part of the system to subscribe to incoming WebSocket messages."""
+        if message_type not in cls._incoming_subscribers:
+            cls._incoming_subscribers[message_type] = []
+        cls._incoming_subscribers[message_type].append(callback)
+
+    @classmethod
+    async def handle_message(cls, websocket: WebSocket):
+        """Listens for incoming messages and dispatches them to subscribers."""
         try:
             while True:
                 data = await websocket.receive_text()
                 print(f"📩 Received from frontend: {data}")
-                response = {"response": f"Server received: {data}"}
-                await self.broadcast(response)
+                message = json.loads(data)
+                message_type = message.get("type")
+
+                # Notify all subscribers of this message type
+                if message_type in cls._incoming_subscribers:
+                    for callback in cls._incoming_subscribers[message_type]:
+                        await callback(message)
+
         except Exception as e:
             print(f"⚠️ WebSocket error: {e}")
         finally:
-            await self.disconnect(websocket)
+            await cls.disconnect(websocket)

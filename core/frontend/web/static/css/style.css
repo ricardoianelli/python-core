@@ -1,8 +1,26 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    margin: 20px;
 }
-button {
+
+.log-input-container {
+    margin-bottom: 20px;
+}
+
+input, select, button {
     padding: 10px;
     font-size: 16px;
+    margin: 5px;
+}
+
+#logContainer {
+    text-align: left;
+    width: 50%;
+    margin: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #f9f9f9;
+    max-height: 300px;
+    overflow-y: auto;
 }
