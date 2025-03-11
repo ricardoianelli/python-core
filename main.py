@@ -8,7 +8,7 @@ from core.frontend.launcher import start_frontend
 async def main():
     """ Orchestrates backend initialization, server startup, and frontend. """
 
-    await LogService.initialize()
+    await LogService.initialize(use_console_logging=False)
     
     await LogService.log_async("Initializing Python Core...")
     
