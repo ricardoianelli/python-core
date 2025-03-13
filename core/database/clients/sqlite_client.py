@@ -1,6 +1,6 @@
 import aiosqlite
 from typing import Any, List, Dict, Optional
-from database.database_client import DatabaseClient
+from core.database.database_client import DatabaseClient
 
 class SQLiteClient(DatabaseClient):
     def __init__(self):

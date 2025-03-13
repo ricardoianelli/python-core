@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+from core.database.clients.sqlite_client import SQLiteClient
 from core.logging.logger_interface import LoggerInterface
 from core.logging.log_repository import LogRepository
 from core.backend.websocket_manager import WebSocketManager
@@ -8,7 +9,7 @@ class DatabaseLogger(LoggerInterface):
     """Logs messages to the database and handles database operations."""
 
     def __init__(self):
-        self.repository = LogRepository()
+        self.repository = LogRepository(SQLiteClient())
 
     async def initialize(self):
         """Ensures the logs table exists and subscribes to WebSocket events."""

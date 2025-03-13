@@ -1,52 +1,43 @@
-import aiosqlite
-from core.logging import queries
+from core.database.database_client import DatabaseClient
+import core.logging.queries as Queries
 
 class LogRepository:
     """Handles all database operations for logs."""
 
-    def __init__(self, db_path="app.db"):
+    def __init__(self, db_client: DatabaseClient, db_path="app.db"):
+        self.client: DatabaseClient = db_client
         self.db_path = db_path
 
     async def initialize_database(self):
         """Ensures the logs table exists."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(queries.CREATE_LOGS_TABLE)
-            await db.commit()
-
+        await self.client.connect(self.db_path)
+        await self.client.execute(Queries.CREATE_LOGS_TABLE)
+        await self.client.execute(Queries.CREATE_TIMESTAMP_INDEX)
+        
     async def add_log(self, log_level: str, message: str, timestamp: str):
         """Inserts a log into the database using the provided timestamp."""
-        async with aiosqlite.connect("app.db") as db:
-            await db.execute(queries.INSERT_LOG, (log_level, message, timestamp))
-            await db.commit()
+        await self.client.execute(Queries.INSERT_LOG, (log_level, message, timestamp))
 
     async def get_logs(self):
         """Fetches all logs from the database."""
-        async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute(queries.FETCH_ALL_LOGS) as cursor:
-                rows = await cursor.fetchall()
-                return [{"id": row[0], "log_level": row[1], "message": row[2], "timestamp": row[3]} for row in rows]
+        return await self.client.fetch_all(Queries.FETCH_ALL_LOGS)
 
     async def get_logs_by_level(self, log_level: str):
         """Fetches logs filtered by log level."""
-        async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute(queries.FETCH_LOGS_BY_LEVEL, (log_level,)) as cursor:
-                rows = await cursor.fetchall()
-                return [{"id": row[0], "log_level": row[1], "message": row[2], "timestamp": row[3]} for row in rows]
+        return await self.client.fetch_all(Queries.FETCH_LOGS_BY_LEVEL, (log_level,))
 
     async def delete_old_logs(self, max_entries: int):
         """Deletes logs older than the latest 'max_entries' records."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(queries.DELETE_OLD_LOGS, (max_entries,))
-            await db.commit()
-            
+        await self.client.execute(Queries.DELETE_OLD_LOGS, (max_entries,))
+
     async def delete_log(self, log_id: int):
         """Deletes a log by ID."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(queries.DELETE_LOG_BY_ID, (log_id,))
-            await db.commit()
+        await self.client.execute(Queries.DELETE_LOG_BY_ID, (log_id,))
 
     async def clear_logs(self):
         """Deletes all logs."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(queries.CLEAR_ALL_LOGS)
-            await db.commit()
+        await self.client.execute(Queries.CLEAR_ALL_LOGS)
+
+    async def close(self):
+        """Closes the database connection."""
+        await self.client.close()
