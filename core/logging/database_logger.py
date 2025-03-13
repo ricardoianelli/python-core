@@ -10,7 +10,7 @@ class DatabaseLogger(LoggerInterface):
     def __init__(self):
         self.repository = LogRepository()
 
-    async def initialize_database(self):
+    async def initialize(self):
         """Ensures the logs table exists and subscribes to WebSocket events."""
         await self.repository.initialize_database()
 

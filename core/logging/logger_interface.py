@@ -4,6 +4,11 @@ class LoggerInterface(ABC):
     """Abstract interface for logging implementations."""
 
     @abstractmethod
+    async def initialize(self):
+        """Do any required initialization"""
+        pass
+    
+    @abstractmethod
     async def log_async(self, log_level: str, message: str):
         """Logs a message asynchronously."""
         pass
